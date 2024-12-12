@@ -204,7 +204,7 @@ class TicTacToe:
         elif score == -10:
             return "Human wins!"
         elif not self.is_moves_left():
-            return "It's a draw!"
+            return "It's a draw!!"
         return None
 
 def main():

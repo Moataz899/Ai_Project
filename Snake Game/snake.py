@@ -11,7 +11,7 @@ class GameState(enum.Enum):
     PAUSED = 2
 
 class Settings:
-    """Game configuration and constants"""
+    """ Game configuration and constants """
     # Screen Dimensions
     WIDTH = 800
     HEIGHT = 600

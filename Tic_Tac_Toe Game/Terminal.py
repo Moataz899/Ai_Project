@@ -12,7 +12,7 @@ def is_moves_left(board):
 def evaluate(board):
     """Evaluates the board and returns a score."""
     # Check rows, columns, and diagonals
-    lines = board + list(zip(*board))  # Rows + Columns
+    lines = board + list(zip(*board))  # Rows + olumns
     diagonals = [[board[i][i] for i in range(3)], [board[i][2-i] for i in range(3)]]  # Diagonals
     lines += diagonals
 
