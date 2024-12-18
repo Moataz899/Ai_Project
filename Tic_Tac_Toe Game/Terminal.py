@@ -3,11 +3,11 @@ import random
 # Global variables
 player = ''  # AI player
 opponent = ''  # Human player
-board = [['_' for _ in range(3)] for _ in range(3)]
+board = [['_' for _ in range(3)] for _ in range(3)] 
 
 def is_moves_left(board):
     """Returns True if there are moves left on the board."""
-    return any('_' in row for row in board)
+    return any('_' in row for row in board)   
 
 def evaluate(board):
     """Evaluates the board and returns a score."""
@@ -194,6 +194,5 @@ def play_game():
             print("Thank you for playing!")
             break
 
-if __name__ == "__main__":
-    play_game()
+play_game()
     
