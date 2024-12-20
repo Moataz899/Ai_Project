@@ -6,25 +6,17 @@ class TicTacToe:
     def __init__(self, master):
         self.master = master
         self.master.title("Tic Tac Toe")
-        
-        # Game variables
         self.player = ''
         self.opponent = ''
         self.board = [['_' for _ in range(3)] for _ in range(3)]
         self.human_first = True
-        
-        # Start with symbol selection
         self.show_symbol_selection()
 
     def show_symbol_selection(self):
-        # Clear previous widgets
         for widget in self.master.winfo_children():
             widget.destroy()
         
-        # Symbol Selection Label
         tk.Label(self.master, text="Choose Your Symbol", font=('Arial', 16)).pack(pady=20)
-        
-        # Symbol Buttons
         frame = tk.Frame(self.master)
         frame.pack(pady=20)
         
@@ -34,26 +26,21 @@ class TicTacToe:
                   font=('Arial', 14), width=5).pack(side=tk.LEFT, padx=10)
 
     def set_symbol(self, symbol):
-        # Set player and opponent symbols
         if symbol == 'x':
             self.player = 'o'
             self.opponent = 'x'
         else:
             self.player = 'x'
             self.opponent = 'o'
-        
-        # Ask who goes first
-        self.show_first_turn_selection()
+            
+            self.show_first_turn_selection()
 
     def show_first_turn_selection(self):
-        # Clear previous widgets
         for widget in self.master.winfo_children():
             widget.destroy()
         
-        # First Turn Selection Label
         tk.Label(self.master, text="Do You Want to Go First?", font=('Arial', 16)).pack(pady=20)
         
-        # First Turn Buttons
         frame = tk.Frame(self.master)
         frame.pack(pady=20)
         
@@ -66,19 +53,15 @@ class TicTacToe:
         self.human_first = human_first
         self.board = [['_' for _ in range(3)] for _ in range(3)]
         
-        # Create game board
         self.create_board_gui()
         
-        # If AI starts, make first move
         if not human_first:
             self.ai_turn()
 
     def create_board_gui(self):
-        # Clear previous widgets
         for widget in self.master.winfo_children():
             widget.destroy()
         
-        # Create 3x3 grid of buttons
         self.buttons = []
         for i in range(3):
             row = []
@@ -91,48 +74,37 @@ class TicTacToe:
             self.buttons.append(row)
 
     def human_turn(self, row, col):
-        # Check if move is valid
         if self.board[row][col] == '_':
-            # Make human move
             self.board[row][col] = self.opponent
             self.buttons[row][col].config(text=self.opponent.upper())
             
-            # Check for winner
             result = self.check_winner()
             if result:
                 self.show_result(result)
                 return
-            
-            # AI turn
             self.ai_turn()
 
     def ai_turn(self):
-        # Find best move using minimax
         best_move = self.find_best_move()
         
-        # Make AI move
         self.board[best_move[0]][best_move[1]] = self.player
         self.buttons[best_move[0]][best_move[1]].config(text=self.player.upper())
         
-        # Check for winner
         result = self.check_winner()
         if result:
             self.show_result(result)
 
     def show_result(self, result):
         messagebox.showinfo("Game Over", result)
-        # Ask to play again
         if messagebox.askyesno("Play Again", "Do you want to play again?"):
             self.show_symbol_selection()
         else:
             self.master.quit()
 
-    # Existing game logic methods from previous implementation
     def is_moves_left(self):
         return any('_' in row for row in self.board)
 
     def evaluate(self):
-        # Check rows, columns, and diagonals
         lines = self.board + list(zip(*self.board))
         diagonals = [[self.board[i][i] for i in range(3)], 
                      [self.board[i][2-i] for i in range(3)]]
@@ -149,11 +121,11 @@ class TicTacToe:
     def minimax(self, depth, is_maximizing_player, alpha=-1000, beta=1000):
         score = self.evaluate()
 
-        if score == 10:  # Player wins
+        if score == 10: 
             return score
-        if score == -10:  # Opponent wins
+        if score == -10:  
             return score
-        if not self.is_moves_left():  # No moves left (draw)
+        if not self.is_moves_left():
             return 0
 
         if is_maximizing_player:
@@ -204,7 +176,7 @@ class TicTacToe:
         elif score == -10:
             return "Human wins!"
         elif not self.is_moves_left():
-            return "It's a draw!!"
+            return "It's a draw!"
         return None
 
 def main():
@@ -212,5 +184,5 @@ def main():
     game = TicTacToe(root)
     root.mainloop()
 
-if __name__ == "__main__":
-    main()
+
+main()

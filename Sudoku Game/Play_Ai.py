@@ -12,16 +12,16 @@ def is_valid(board, row_sets, col_sets, box_sets, row, col, num):
 def ai_move(board, row_sets, col_sets, box_sets):
     for r in range(9):
         for c in range(9):
-            if board[r][c] == 0:  # Find an empty cell
+            if board[r][c] == 0: 
                 for num in range(1, 10):
                     if is_valid(board, row_sets, col_sets, box_sets, r, c, num):
-                        # Place the number
+            
                         board[r][c] = num
                         row_sets[r].add(num)
                         col_sets[c].add(num)
                         box_sets[(r // 3) * 3 + (c // 3)].add(num)
-                        return True  # AI made a move
-    return False  # No valid moves for AI
+                        return True 
+    return False 
 
 def player_move(board, row_sets, col_sets, box_sets):
     while True:
@@ -54,7 +54,7 @@ def solve_sudoku(board):
                 col_sets[c].add(num)
                 box_sets[(r // 3) * 3 + (c // 3)].add(num)
 
-    turn = 'AI'  # Start with AI's turn
+    turn = 'AI' 
     while True:
         print_board(board)
         if all(all(cell != 0 for cell in row) for row in board):
@@ -66,13 +66,12 @@ def solve_sudoku(board):
             if not ai_move(board, row_sets, col_sets, box_sets):
                 print("AI has no valid moves left.")
                 break
-            turn = 'Player'  # Switch to player's turn
+            turn = 'Player'  
         else:
             print("Player's turn:")
             player_move(board, row_sets, col_sets, box_sets)
-            turn = 'AI'  # Switch to AI's turn
+            turn = 'AI'  
 
-# Example Sudoku board (0 represents empty cells)
 sudoku_board = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],

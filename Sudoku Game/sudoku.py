@@ -1,94 +1,73 @@
-def is_valid_move(grid, row, col, number):
-    """Checks if placing 'number' at (row, col) in 'grid' is valid.
 
-    Args:
-        grid: A 9x9 list of lists representing the Sudoku grid.
-        row: The row index of the cell to check.
-        col: The column index of the cell to check.
-        number: The number to check if it can be placed.
+board = [
+    [5, 3, 0, 0, 7, 0, 0, 0, 0],
+    [6, 0, 0, 1, 9, 5, 0, 0, 0],
+    [0, 9, 8, 0, 0, 0, 0, 6, 0],
+    [8, 0, 0, 0, 6, 0, 0, 0, 3],
+    [4, 0, 0, 8, 0, 3, 0, 0, 1],
+    [7, 0, 0, 0, 2, 0, 0, 0, 6],
+    [0, 6, 0, 0, 0, 0, 2, 8, 0],
+    [0, 0, 0, 4, 1, 9, 0, 0, 5],
+    [0, 0, 0, 0, 8, 0, 0, 7, 9]
+]
 
-    Returns:
-        True if the move is valid, False otherwise.
-    """
-
-    # Check row
+def is_valid_move(board, row, col, number):
     for x in range(9):
-        if grid[row][x] == number:
+        if board[row][x] == number:
             return False
 
-    # Check column
     for x in range(9):
-        if grid[x][col] == number:
+        if board[x][col] == number:
             return False
 
-    # Check 3x3 subgrid
     corner_row = row // 3 * 3
     corner_col = col // 3 * 3
     for x in range(3):
         for y in range(3):
-            if grid[corner_row + x][corner_col + y] == number:
+            if board[corner_row + x][corner_col + y] == number:
                 return False
-
     return True
 
-def solve(grid, row, col):
-    """
-    Solves a Sudoku puzzle using backtracking.
-
-    Args:
-        grid: A 9x9 list of lists representing the Sudoku grid.
-        row: The current row index.
-        col: The current column index.
-
-    Returns:
-        True if the puzzle is solved, False otherwise.
-    """
-
-    # Base case: If we have reached the end of the grid, the puzzle is solved
+def solve(board, row, col):
     if col == 9:
         if row == 8:
             return True
         row += 1
         col = 0
 
-    # If the current cell already has a number, move to the next cell
-    if grid[row][col] > 0:
-        return solve(grid, row, col + 1)
+    if board[row][col] > 0:
+        return solve(board, row, col + 1)
 
-    # Try placing numbers from 1 to 9 in the current cell
     for num in range(1, 10):
-        # Check if placing 'num' is valid
-        if is_valid_move(grid, row, col, num):
-            # Place 'num' in the grid
-            grid[row][col] = num
+        if is_valid_move(board, row, col, num):
+            board[row][col] = num
 
-            # Recursively solve the rest of the grid
-            if solve(grid, row, col + 1):
+            if solve(board, row, col + 1):
                 return True
+            board[row][col] = 0
 
-            # If placing 'num' doesn't lead to a solution, backtrack
-            grid[row][col] = 0
-
-    # If no number can be placed in the current cell, return False
     return False
 
-grid = [
-        [5, 3, 0, 0, 7, 0, 0, 0, 0],
-        [6, 0, 0, 1, 9, 5, 0, 0, 0],
-        [0, 9, 8, 0, 0, 0, 0, 6, 0],
-        [8, 0, 0, 0, 6, 0, 0, 0, 3],
-        [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 2, 0, 0, 0, 6],
-        [0, 6, 0, 0, 0, 0, 2, 8, 0],
-        [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
-    ]
+def print_board(board):
+    for i in range(len(board)):
+        if i % 3 == 0 and i != 0:
+            print("- - - - - - - - - - - - ")
 
-if solve(grid, 0, 0):
-    for i in range(9):
-        for j in range(9):
-            print(grid[i][j], end=" ")
-        print()
-    print("Sudoku solved!")
+        for j in range(len(board[0])):
+            if j % 3 == 0 and j != 0:
+                print(" | ", end="")
+
+            if j == 8:
+                print(board[i][j])
+            else:
+                print(str(board[i][j]) + " ", end="")
+
+print("Initial Sudoku grid:")
+print_board(board)
+
+if solve(board, 0, 0):
+    print("\nSudoku solved:")
+    print_board(board)
 else:
     print("No solution found.")
+    

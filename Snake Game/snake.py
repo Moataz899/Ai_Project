@@ -11,15 +11,13 @@ class GameState(enum.Enum):
     PAUSED = 2
 
 class Settings:
-    """ Game configuration and constants """
-    # Screen Dimensions
+    """Game configuration and constants"""
     WIDTH = 800
     HEIGHT = 600
     GRID_SIZE = 20
     GRID_WIDTH = WIDTH // GRID_SIZE
     GRID_HEIGHT = HEIGHT // GRID_SIZE
 
-    # Colors
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     RED = (255, 0, 0)
@@ -27,7 +25,6 @@ class Settings:
     BLUE = (0, 0, 255)
     GRAY = (100, 100, 100)
 
-    # Game Settings
     FPS = 10
     DIFFICULTY_LEVELS = {
         'Easy': 5,
@@ -39,16 +36,16 @@ class Node:
     """A* Pathfinding Node representation"""
     def __init__(self, position: Tuple[int, int], g: int = 0, h: int = 0):
         self.position = position
-        self.g = g  # Cost from start node
-        self.h = h  # Heuristic (estimated cost to goal)
-        self.f = g + h  # Total cost
+        self.g = g 
+        self.h = h 
+        self.f = g + h  
         self.parent = None
 
     def __lt__(self, other):
         return self.f < other.f
 
 class PathfindingStrategy:
-    """Flexible Pathfinding Strategy"""
+
     @staticmethod
     def manhattan_distance(a: Tuple[int, int], b: Tuple[int, int]) -> int:
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -63,7 +60,6 @@ class PathfindingStrategy:
         ]
 
 class AStar:
-    """A* Pathfinding Algorithm"""
     @staticmethod
     def find_path(
         start: Tuple[int, int], 
@@ -94,7 +90,6 @@ class AStar:
             closed_set.add(current_node.position)
 
             for neighbor_pos in PathfindingStrategy.get_neighbors(current_node.position):
-                # Skip if neighbor is an obstacle or out of bounds
                 if (neighbor_pos in obstacles or 
                     neighbor_pos[0] < 0 or neighbor_pos[0] >= Settings.GRID_WIDTH or 
                     neighbor_pos[1] < 0 or neighbor_pos[1] >= Settings.GRID_HEIGHT):
@@ -110,14 +105,13 @@ class AStar:
                 if neighbor.position in closed_set:
                     continue
 
-                # Check if neighbor is already in open list with a lower cost
                 existing_node = next((n for n in open_list if n.position == neighbor.position), None)
                 if existing_node and existing_node.f <= neighbor.f:
                     continue
 
                 heapq.heappush(open_list, neighbor)
 
-        return []  # No path found
+        return []
 
 class Snake:
     """Snake game entity"""
@@ -157,30 +151,25 @@ class Renderer:
     def draw(screen, game):
         screen.fill(Settings.BLACK)
 
-        # Draw Snake
         for segment in game.snake.body:
             pygame.draw.rect(screen, Settings.GREEN, 
                              (segment[0] * Settings.GRID_SIZE, 
                               segment[1] * Settings.GRID_SIZE, 
                               Settings.GRID_SIZE, Settings.GRID_SIZE))
 
-        # Draw Food
         pygame.draw.rect(screen, Settings.RED, 
                          (game.food.position[0] * Settings.GRID_SIZE, 
                           game.food.position[1] * Settings.GRID_SIZE, 
                           Settings.GRID_SIZE, Settings.GRID_SIZE))
 
-        # Draw Score
         font = pygame.font.Font(None, 36)
         score_text = font.render(f"Score: {game.score}", True, Settings.WHITE)
         screen.blit(score_text, (10, 10))
 
-        # Draw Game Over or Pause
         if game.state == GameState.GAME_OVER:
             game_over_text = font.render("Game Over!", True, Settings.RED)
             screen.blit(game_over_text, (Settings.WIDTH // 2 - 100, Settings.HEIGHT // 2))
 
-        # Draw Exit Instructions
         if game.state in [GameState.GAME_OVER, GameState.RUNNING]:
             exit_text = font.render("Press ESC to Exit", True, Settings.WHITE)
             screen.blit(exit_text, (Settings.WIDTH // 2 - 100, Settings.HEIGHT - 50))
@@ -211,7 +200,6 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.exit_game()
                 
-                # Restart game when in game over state
                 if event.key == pygame.K_r and self.state == GameState.GAME_OVER:
                     self.__init__()
 
@@ -228,11 +216,9 @@ class Game:
             head[1] < 0 or head[1] >= Settings.GRID_HEIGHT):
             self.state = GameState.GAME_OVER
 
-        # Self collision
         if head in self.snake.body[1:]:
             self.state = GameState.GAME_OVER
 
-        # Food collision
         if head == self.food.position:
             self.snake.grow()
             self.food = Food(self.snake.body)
@@ -244,7 +230,6 @@ class Game:
             self.handle_events()
 
             if self.state == GameState.RUNNING:
-                # Find path to food using A*
                 obstacles = set(self.snake.body[1:])
                 path = AStar.find_path(
                     self.snake.body[0], 
@@ -266,5 +251,4 @@ def main():
     game = Game(difficulty='Hard')
     game.run()
 
-if __name__ == "__main__":
-    main()
+main()
